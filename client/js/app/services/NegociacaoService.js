@@ -117,14 +117,14 @@ class NegociacaoService {
     importa(listaAtual) {
 
         return this.obterNegociacoes()
-            .then(negociacoes =>
-                negociacoes.filter(negociacao =>
-                    !listaAtual.some(negociacaoExistente =>
-                        JSON.stringify(negociacao) == JSON.stringify(negociacaoExistente)))
+            .then(negociacoes => 
+                negociacoes.filter(negociacao => 
+                    !listaAtual.some(negociacaoExistente => 
+                        negociacao.isEquals(negociacaoExistente)))
             )
             .catch(erro => {
                 console.log(erro);
-                throw new Error("Não foi possível importar as negociações");
-            });
+                throw new Error('Não foi possível buscar negociações para importar');
+            })
     }
 }
