@@ -54,8 +54,9 @@ class NegociacaoController {
         service
             .obterNegociacoes()
             .then(negociacoes =>
-                negociacoes.filter(negociacao => 
-                    this._listaNegociacoes.negociacoes.indexOf(Negociacao) == -1)
+                negociacoes.filter(negociacao =>
+                    !this._listaNegociacoes.negociacoes.some(negociacaoExistente =>
+                        JSON.stringify(negociacao) == JSON.stringify(negociacaoExistente)))
             )
             .then(negociacoes => {
                 negociacoes.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
