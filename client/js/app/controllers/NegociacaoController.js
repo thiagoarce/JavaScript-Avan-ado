@@ -19,16 +19,24 @@ class NegociacaoController {
             'texto');
 
         this._ordemAtual = '';
+        this._init();
 
+
+    }
+
+    _init(){
         ConnectionFactory
-            .getConnection()
-            .then(connection => new NegociacaoDao(connection))
-            .then(dao => dao.listaTodos())
-            .then(negociacoes =>
-                negociacoes.forEach(negociacao =>
-                    this._listaNegociacoes.adiciona(negociacao)))
-            .catch(erro => this._mensagem.texto = erro);
+        .getConnection()
+        .then(connection => new NegociacaoDao(connection))
+        .then(dao => dao.listaTodos())
+        .then(negociacoes =>
+            negociacoes.forEach(negociacao =>
+                this._listaNegociacoes.adiciona(negociacao)))
+        .catch(erro => this._mensagem.texto = erro);
 
+    setInterval(() => {
+        this.importaNegociacoes();
+    }, 1000);
     }
 
     adiciona(event) {
