@@ -12,7 +12,6 @@ class NegociacaoService {
             .get('negociacoes/semana')
             .then(negociacoes => {
 
-                console.log(negociacoes);
 
                 return negociacoes.map(objeto => new Negociacao(new Date(objeto.data), objeto.quantidade, objeto.valor));
             })
@@ -29,7 +28,6 @@ class NegociacaoService {
             .get('negociacoes/anterior')
             .then(negociacoes => {
 
-                console.log(negociacoes);
 
                 return negociacoes.map(objeto => new Negociacao(new Date(objeto.data), objeto.quantidade, objeto.valor));
             })
@@ -46,7 +44,7 @@ class NegociacaoService {
             .get('negociacoes/retrasada')
             .then(negociacoes => {
 
-                console.log(negociacoes);
+
 
                 return negociacoes.map(objeto => new Negociacao(new Date(objeto.data), objeto.quantidade, objeto.valor));
             })

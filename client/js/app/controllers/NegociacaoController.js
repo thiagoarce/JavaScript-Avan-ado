@@ -7,6 +7,8 @@ class NegociacaoController {
         this._inputQuantidade = $('#quantidade');
         this._inputValor = $('#valor');
 
+        this._service = new NegociacaoService();
+        
         this._listaNegociacoes = new Bind(
             new ListaNegociacoes(),
             new NegociacoesView($('#negociacoesView')),
@@ -20,7 +22,7 @@ class NegociacaoController {
 
         this._ordemAtual = '';
         this._init();
-        this._service = new NegociacaoService();
+        
 
 
     }
