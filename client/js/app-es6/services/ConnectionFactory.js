@@ -1,68 +1,67 @@
-var ConnectionFactory = (function () {
-    const stores = ['negociacoes'];
-    const dbversion = 5;
-    const dbName = 'aluraframe'
 
-    var connection = null;
-    var close = null;
+const stores = ['negociacoes'];
+const dbversion = 5;
+const dbName = 'aluraframe'
 
-    return class ConnectionFactory {
+let connection = null;
+let close = null;
 
-        constructor() {
+export class ConnectionFactory {
 
-            throw new Error('Não é possível criar instâncias de ConnectionFactory')
-        }
+    constructor() {
 
-        static getConnection() {
+        throw new Error('Não é possível criar instâncias de ConnectionFactory')
+    }
 
-            return new Promise((resolve, reject) => {
+    static getConnection() {
 
-                let openRequest = window.indexedDB.open(dbName, dbversion);
+        return new Promise((resolve, reject) => {
 
-                openRequest.onupgradeneeded = e => {
+            let openRequest = window.indexedDB.open(dbName, dbversion);
 
-                    ConnectionFactory._createStores(e.target.result);
+            openRequest.onupgradeneeded = e => {
 
-                };
+                ConnectionFactory._createStores(e.target.result);
 
-                openRequest.onsuccess = e => {
+            };
 
-                    if (!connection) {
-                        connection = e.target.result;
-                        //Monkey Patch
-                        close = connection.close.bind(connection);
-                        connection.close = function(){
-                            throw new Error('Você não pode fechar diretamente a conexão')
-                        }
+            openRequest.onsuccess = e => {
+
+                if (!connection) {
+                    connection = e.target.result;
+                    //Monkey Patch
+                    close = connection.close.bind(connection);
+                    connection.close = function () {
+                        throw new Error('Você não pode fechar diretamente a conexão')
                     }
-                    resolve(connection);
-
-                };
-
-                openRequest.onerror = e => {
-                    console.log(e.target.error);
-
-                    reject(e.target.error.name);
                 }
+                resolve(connection);
 
-            });
-        }
+            };
 
-        static _createStores(connection) {
+            openRequest.onerror = e => {
+                console.log(e.target.error);
 
-            stores.forEach(store => {
-                if (connection.objectStoreNames.contains(store))
-                    connection.deleteObjectStore(store);
-
-                connection.createObjectStore(store, { autoIncrement: true });
-            });
-        }
-
-        static closeConnection(){
-            if(connection){
-                close();
-                connection = null;
+                reject(e.target.error.name);
             }
+
+        });
+    }
+
+    static _createStores(connection) {
+
+        stores.forEach(store => {
+            if (connection.objectStoreNames.contains(store))
+                connection.deleteObjectStore(store);
+
+            connection.createObjectStore(store, { autoIncrement: true });
+        });
+    }
+
+    static closeConnection() {
+        if (connection) {
+            close();
+            connection = null;
         }
     }
-})();
+}
